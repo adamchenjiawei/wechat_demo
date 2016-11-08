@@ -1,0 +1,14 @@
+defaults: &defaults
+  app_id: "wx7f946a9ad5d716b0"
+  app_secret: "5622e094ea73615e684b6fbca216d4c3"
+  domain: "http://tmtwxupvfv.localtunnel.me"
+  token: "weixin_demo"
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults

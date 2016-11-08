@@ -1,0 +1,1 @@
+$wx_client ||= WeixinAuthorize::Client.new(Setting.app_id, Setting.app_secret)
