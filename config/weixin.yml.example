@@ -1,0 +1,14 @@
+defaults: &defaults
+  app_id: "APPID"
+  app_secret: "SECRET"
+  domain: "DOMAIN"
+  token: "TOKEN"
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults

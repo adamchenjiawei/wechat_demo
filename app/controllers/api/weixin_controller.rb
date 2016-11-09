@@ -12,6 +12,7 @@ class Api::WeixinController < ApplicationController
 
     to_user = params[:xml][:FromUserName].to_s
 
+    # 微信消息推送
     if params[:xml][:MsgType] == 'text'
       content = params[:xml][:Content].to_s
       if content == '二维码'
@@ -21,10 +22,14 @@ class Api::WeixinController < ApplicationController
       else
         Weixin.send_text_custom(to_user, '只能发送“二维码”')
       end
-    else params[:xml][:MsgType] == 'event'
+    # 微信事件
+    elsif params[:xml][:MsgType] == 'event'
+      # 扫码事件
       if params[:xml][:Event] == 'SCAN'
         key = params[:xml][:EventKey]
         Weixin.send_text_custom(to_user, "#{Setting.domain}#{api_weixin_index_path(:key => key)}")
+      elsif params[:xml][:Event] == 'LOCATION'
+        Weixin.send_text_custom(to_user, "维度：#{params[:xml][:Latitude]} 经度：#{params[:xml][:Longitude]}")
       end
     end
   end

@@ -3,7 +3,6 @@ class Weixin
 
   # 签名算法
   def self.signature(timestamp, nonce_str)
-    p Setting.token
     tmp_arr = [Setting.token, timestamp, nonce_str].sort!
     tmp_str = tmp_arr.join('')
     Digest::SHA1.hexdigest(tmp_str)
@@ -15,11 +14,13 @@ class Weixin
     $wx_client.get_access_token
   end
 
+  # 获取二维码的图片地址
   def self.qr_code(scene)
     code = $wx_client.create_qr_scene(scene, 1800)
     "https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=#{code.result['ticket']}"
   end
 
+  # 上传临时图片资源
   def self.upload_tmp_image(image_file_or_path)
     if http?(image_file_or_path)
       image_name = Digest::SHA1.hexdigest(image_file_or_path)
@@ -31,6 +32,7 @@ class Weixin
     res.result['media_id']
   end
 
+  # 下载二维码图片资源
   def self.save_image(image_name, img_url)
     File.open("/tmp/#{image_name}", 'wb'){|f| f.write(open(img_url).read)}
     "/tmp/#{image_name}"
@@ -42,10 +44,12 @@ class Weixin
     uri.scheme =~ /^https?$/
   end
 
+  # 发送图片客服消息
   def self.send_image_custom(to_user, media_id)
     $wx_client.send_image_custom(to_user, media_id)
   end
 
+  # 发送文本客服消息
   def self.send_text_custom(to_user, content)
     $wx_client.send_text_custom(to_user, content)
   end
