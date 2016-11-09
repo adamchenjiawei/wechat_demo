@@ -3,6 +3,8 @@ defaults: &defaults
   app_secret: "SECRET"
   domain: "DOMAIN"
   token: "TOKEN"
+  weixin:
+    send_tmeplate_msg: "https://api.weixin.qq.com/cgi-bin/message/template/send"
 
 development:
   <<: *defaults

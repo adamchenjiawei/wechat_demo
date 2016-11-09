@@ -19,8 +19,12 @@ class Api::WeixinController < ApplicationController
         qr_code = Weixin.qr_code('123456')
         media_id = Weixin.upload_tmp_image(qr_code)
         Weixin.send_image_custom(to_user, media_id)
+      elsif content == '录入'
+        Weixin.send_artices(to_user)
+      elsif content == '模板'
+        Weixin.send_template(to_user)
       else
-        Weixin.send_text_custom(to_user, '只能发送“二维码”')
+        Weixin.send_text_custom(to_user, '只能发送“二维码” 和 “录入” 和 “模板”')
       end
     # 微信事件
     elsif params[:xml][:MsgType] == 'event'
@@ -30,6 +34,17 @@ class Api::WeixinController < ApplicationController
         Weixin.send_text_custom(to_user, "#{Setting.domain}#{api_weixin_index_path(:key => key)}")
       elsif params[:xml][:Event] == 'LOCATION'
         Weixin.send_text_custom(to_user, "维度：#{params[:xml][:Latitude]} 经度：#{params[:xml][:Longitude]}")
+      elsif params[:xml][:Event] == 'CLICK'
+        key = params[:xml][:EventKey]
+        case key
+          when 'V1001_TODAY_MUSIC'
+            res = 'http://music.163.com/'
+          when 'V1001_GOOD'
+            res = '谢谢点赞！！！'
+          else
+            res = '到黑洞了'
+        end
+        Weixin.send_text_custom(to_user, res)
       end
     end
   end
